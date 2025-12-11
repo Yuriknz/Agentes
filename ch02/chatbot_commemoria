@@ -1,0 +1,58 @@
+# chatbot_com_memoria.py
+import os
+from dotenv import load_dotenv
+from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_core.messages import SystemMessage, HumanMessage
+
+load_dotenv()
+
+class Chatbot:
+    def __init__(self, instrucoes: str):
+        self.modelo = ChatGoogleGenerativeAI(
+            model=os.getenv("google_model", "gemini-2.5-flash-lite"),
+            temperature=0.7
+        )
+        self.historico = [SystemMessage(content=instrucoes)]
+
+    def conversar(self, mensagem: str) -> str:
+        # Adicionar mensagem do usuário ao histórico
+        self.historico.append(HumanMessage(content=mensagem))
+
+        # Obter resposta do modelo
+        resposta = self.modelo.invoke(self.historico)
+
+        # Adicionar resposta ao histórico
+        self.historico.append(resposta)
+
+        return resposta.content
+
+    def limpar_historico(self):
+        # Mantém apenas a SystemMessage
+        self.historico = [self.historico[0]]
+
+def main():
+    bot = Chatbot(
+        instrucoes="Você é um assistente amigável. Responda em português de forma concisa."
+    )
+
+    print("=== Chatbot com Memória ===")
+    print("Comandos: 'sair' para encerrar, 'limpar' para reiniciar conversa\n")
+
+    while True:
+        entrada = input("Você: ").strip()
+
+        if entrada.lower() == 'sair':
+            print("Até logo!")
+            break
+        elif entrada.lower() == 'limpar':
+            bot.limpar_historico()
+            print("Histórico limpo!\n")
+            continue
+        elif not entrada:
+            continue
+
+        resposta = bot.conversar(entrada)
+        print(f"Bot: {resposta}\n")
+
+if __name__ == "__main__":
+    main()
