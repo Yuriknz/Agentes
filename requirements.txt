@@ -1,6 +1,6 @@
 # git config user.name "yuriknz"
 # git config user.email "yuricarneiro9@gmail.com"
-langchain>=1.0.0 
+langchain>=1.1.3 
 langchain-google-genai>=4.0.0
-langgraph>=1.0.0
+langgraph>=1.0.4
 python-dotenv
