@@ -1,0 +1,6 @@
+# git config user.name "yuriknz"
+# git config user.email "yuricarneiro9@gmail.com"
+langchain>=1.0.0 
+langchain-openai>=0.3.0
+langgraph>=1.0.0
+python-dotenv
